@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" />
+    <title>Customize your quizlet!</title>
+
+    <style>
+        div {
+        text-align:CENTER; font-size: 30px; Background-color:
+         #46178f ; color: #c2a5df; border: 2px; border-radius: 12px; width: 400px; margin: auto;
+        }
+
+        th {
+            text-align:CENTER; font-size: 30px; padding: 5px 10px; Background-color:
+            #7338a0 ; color: #FFFFFF; border: 2px; Width: 300px; height: 100px; border-radius: 12px; Margin-top: 30px;
+            font-weight: bold; cursor: pointer;
+        }
+    </style>
+
+
+
+</head>
+
+<body>
+    <p>Customize your quiz here! add questions or remove them depending on the topic and type of quiz you are making.</p>
+
+    <table>
+        <th>Add Questions!</th>
+
+        <tr>
+            <th><button class="GBackButton" onclick="location.href='Game_Scope.html'">Go back</button></th>
+        </tr>
+
+    </table>
+
+    <form id="quizForm">
+  <input type="text" id="question" placeholder="Question">
+  <input type="text" id="a1" placeholder="Answer 1">
+  <input type="text" id="a2" placeholder="Answer 2">
+  <input type="text" id="a3" placeholder="Answer 3">
+  <input type="text" id="a4" placeholder="Answer 4">
+  
+  <label>Correct Answer:</label>
+  <select id="correctIndex">
+    <option value="0">Answer 1</option>
+    <option value="1">Answer 2</option>
+    <option value="2">Answer 3</option>
+    <option value="3">Answer 4</option>
+  </select>
+
+  <button type="button" onclick="saveQuestion()">Save Question</button>
+</form>
+
+
+<script src="script.js"></script>
+</body>
+</html>

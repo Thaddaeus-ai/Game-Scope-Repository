@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" />
+    <title>Begin Quiz!</title>
+</head>
+<body>
+
+    <h1>Quiz Game</h1>
+
+    <div id="game-container">
+        <h3 id="question-text">Loading question...</h3>
+        
+    <table>
+        <tr>
+        <td><button onclick="checkAnswer(0)" id="btn0" class="StartButton">Answer 1</button></td>
+         <td><button onclick="checkAnswer(1)" id="btn1" class="StartButton">Answer 2</button></td>
+        </tr>
+
+        <tr>
+        <td><button onclick="checkAnswer(2)" id="btn2" class="StartButton">Answer 3</button></td>
+        <td><button onclick="checkAnswer(3)" id="btn3" class="StartButton">Answer 4</button></td>
+        </tr>
+    </table>
+
+    
+
+        <p id="feedback" style="font-size: 25px; font-weight: bold; height: 30px;">
+
+        </p>
+
+        <p>Current Score: <span id="score">0</span></p>
+    </div>
+
+    <footer>
+        <p style="color: white; margin: 0;">Quiz Footer Content</p>
+    </footer>
+
+    <script src="script.js"></script> 
+</body>
+</html>
