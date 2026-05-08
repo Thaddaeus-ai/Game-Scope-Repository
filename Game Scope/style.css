@@ -1,0 +1,56 @@
+body {
+   background-color: "Blue"; background-color: #fffdf1; margin: 0;
+}
+
+h1 {
+  color: white; text-align: left; font-family: "Helvetica Neue", 
+  Helvetica, Arial, sans-serif; font-size: 30px; Background-color: 
+  #5e1a92; padding-left: 50px; padding: 20px 20px ; border: 1px solid #FFFFFF; border: none; margin: 0;
+}
+
+h3 {
+  text-align: Center; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; margin-top: 50px;
+}
+
+P {
+ text-align: CENTER; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+table {
+  text-align: auto; Margin: Auto; 
+}
+
+.StartButton  {
+  font-size: 30px; padding: 5px 10px; Background-color:
+   #7338a0 ; color: #FFFFFF; border: 2px; Width: 300px; height: 100px; border-radius: 12px; Margin-top: 30px;
+   font-weight: bold; cursor: pointer;
+}
+
+.AddButton {
+   font-size: 30px; padding: 5px 10px; Background-color: 
+   #7338a0; color: #FFFFFF; border: 2px; Width: 300px; height: 100px; border-radius: 12px; Margin-top: 30px;
+   font-weight: bold; cursor: pointer;
+}
+
+.GBackButton {
+  text-align:CENTER; font-size: 30px; padding: 5px 10px; Background-color: 
+   #7338a0; color: #FFFFFF; border: 2px; Width: 300px; height: 100px; border-radius: 12px; Margin-top: 30px;
+   font-weight: bold; cursor: pointer;
+}
+
+.StartButton:hover, .AddButton:hover, .GBackButton:hover {
+  background-color: #541d7e;
+  cursor: pointer;
+}
+
+footer {
+ text-align: Center; Background-color: #924DBF; padding: 20px 20px;
+ position: fixed; width: 100%;
+ bottom: 0;
+}
+
+main {
+  position: fixed;
+  bottom: 0;
+  flex: 1;
+}
