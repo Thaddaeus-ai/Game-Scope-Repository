@@ -27,6 +27,25 @@ function saveQuestion() {
     const cIndex = document.getElementById("correctIndex");
 
     if (!qInput.value || !a1.value || !a2.value || !a3.value || !a4.value) {
+    alert("Please fill in all fields!");
+    return;
+    }
+
+    let newQuestion = {
+        id: Date.now(),
+        question: qInput.value,
+        answers: [a1.value, a2.value, a3.value, a4.value],
+        correct: parseInt(cIndex.value) 
+    };
+
+    let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
+        quiz.push(newQuestion);
+        localStorage.setItem("quiz", JSON.stringify(quiz));
+
+    alert("Question saved!");
+        qInput.value = ""; a1.value = ""; a2.value = ""; a3.value = ""; a4.value = "";
+
+    if (!qInput.value || !a1.value || !a2.value || !a3.value || !a4.value) {
         alert("Please fill in all fields!");
         return;
     }
