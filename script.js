@@ -19,6 +19,16 @@ let score = 0;
 //Tracker for which quiz is selected lol
 let selectedQuizName = null;
 
+const funFacts = [
+    "Testing yourself is 3x more effective than just re-reading your notes!",
+    "Your brain uses about 20% of your body's total energy.",
+    "Taking a 10-minute break every hour helps you memorize things faster.",
+    "Explaining a topic to someone else (or your pet) is the best way to learn it!",
+    "Sleeping after studying helps 'cement' the information into your long-term memory.",
+    "The 'Spacing Effect' means studying 15 mins a day is better than 3 hours once a week.",
+    "Cursive writing helps the brain process information more deeply than typing."
+];
+
 //This is the save questions system guys!!
 function saveQuestion() {
     const qInput = document.getElementById("question");
@@ -55,7 +65,7 @@ function saveQuestion() {
     qInput.value = ""; a1.value = ""; a2.value = ""; a3.value = ""; a4.value = "";
 }
 
-// --- NEW STUFF: Logic to show the list of quizzes in the box ---
+//Logic to show the list of quizzes in the box
 function loadQuizList() {
     const listDiv = document.getElementById("quiz-list");
     if (!listDiv) return;
@@ -76,7 +86,7 @@ function loadQuizList() {
     });
 }
 
-// --- NEW STUFF: Logic to start the specific selected quiz ---
+//Logic to start the specific selected quiz
 function startSelectedQuiz() {
     if (!selectedQuizName) {
         alert("Please select a quiz from the list first!");
@@ -169,8 +179,17 @@ function displayFinalScore() {
     }
 }
 
+function loadRandomFact() {
+    const factElement = document.getElementById("fact-text");
+    if (factElement) {
+        const randomIndex = Math.floor(Math.random() * funFacts.length);
+        factElement.innerText = funFacts[randomIndex];
+    }
+}
+
 window.onload = function() {
     loadQuizList();
+    loadRandomFact();
 
     if (window.location.href.includes("GSQP.html")) {
         startGame();
