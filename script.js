@@ -44,48 +44,76 @@
             return;
         }
 
-        //Prompt to ask which Quiz folder to save into!!
-        let quizName = prompt("Which Quiz should this go into? (e.g. Quiz 1)", "Quiz 1");
-        if (!quizName) return;
+    let quizName = prompt("Which Quiz should this go into? (e.g. Quiz 1)", "Quiz 1");
+    if (!quizName) return;
 
-        let newQuestion = {
-            id: Date.now(),
-            question: qInput.value,
-            answers: [a1.value, a2.value, a3.value, a4.value],
-            correct: parseInt(cIndex.value) 
-        };
+    let newQuestion = {
+        id: Date.now(),
+         question: qInput.value,
+    answers: [a1.value, a2.value, a3.value, a4.value],
+    correct: parseInt(cIndex.value) 
+    };
 
-        //Changed to store in an object of multiple quizzes!!
-        let allQuizzes = JSON.parse(localStorage.getItem("allQuizzes")) || {};
-        if (!allQuizzes[quizName]) allQuizzes[quizName] = [];
-        
-        allQuizzes[quizName].push(newQuestion);
-        localStorage.setItem("allQuizzes", JSON.stringify(allQuizzes));
+    let allQuizzes = JSON.parse(localStorage.getItem("allQuizzes")) || {};
+    if (!allQuizzes[quizName]) allQuizzes[quizName] = [];  
+    allQuizzes[quizName].push(newQuestion);
+    localStorage.setItem("allQuizzes", JSON.stringify(allQuizzes));
 
         alert("Question saved to " + quizName);
         qInput.value = ""; a1.value = ""; a2.value = ""; a3.value = ""; a4.value = "";
-    }
+}
 
-    //Logic to show the list of quizzes in the box
+    //this is for showing all the quizzes in the box
     function loadQuizList() {
         const listDiv = document.getElementById("quiz-list");
         if (!listDiv) return;
 
-        let allQuizzes = JSON.parse(localStorage.getItem("allQuizzes")) || {};
-        listDiv.innerHTML = "";
+let allQuizzes = JSON.parse(localStorage.getItem("allQuizzes")) || {};
+     listDiv.innerHTML = "";
 
-        Object.keys(allQuizzes).forEach(name => {
-            const btn = document.createElement("button");
-            btn.className = "quiz-item";
-            btn.innerText = name;
-            btn.onclick = function() {
-                document.querySelectorAll('.quiz-item').forEach(b => b.classList.remove('selected-quiz'));
-                btn.classList.add('selected-quiz');
-                selectedQuizName = name;
-            };
-            listDiv.appendChild(btn);
-        });
+    Object.keys(allQuizzes).forEach(name => {
+            // Container for the quiz button and delete button
+        const container = document.createElement("div");
+        container.style.display = "flex";
+            container.style.gap = "10px";
+            container.style.alignItems = "center";
+
+    const btn = document.createElement("button");
+    btn.className = "quiz-item";
+    btn.style.flexGrow = "1";
+    btn.innerText = name;
+    btn.onclick = function() {
+        document.querySelectorAll('.quiz-item').forEach(b => b.classList.remove('selected-quiz'));
+            btn.classList.add('selected-quiz');
+            selectedQuizName = name;
+};
+
+    const delBtn = document.createElement("button");
+        delBtn.innerText = "X";
+    delBtn.className = "delete-quiz-btn";
+    delBtn.onclick = function(e) {
+        e.stopPropagation(); // Stops it from selecting the quiz when deleting
+        deleteQuiz(name);
+    };
+
+         container.appendChild(btn);
+        container.appendChild(delBtn);
+        listDiv.appendChild(container);
+    });
+}
+
+    // Function to delete a quiz
+    function deleteQuiz(name) {
+        if (confirm("Are you sure you want to delete '" + name + "'?")) {
+    let allQuizzes = JSON.parse(localStorage.getItem("allQuizzes")) || {};
+    delete allQuizzes[name];
+        localStorage.setItem("allQuizzes", JSON.stringify(allQuizzes));
+            if (selectedQuizName === name) {
+            selectedQuizName = null;
+            }
+        loadQuizList();
     }
+}
 
     //Logic to start the specific selected quiz
     function startSelectedQuiz() {
@@ -96,7 +124,7 @@
         let allQuizzes = JSON.parse(localStorage.getItem("allQuizzes")) || {};
         localStorage.setItem("quiz", JSON.stringify(allQuizzes[selectedQuizName]));
         window.location.href = "GSQP.html";
-    }
+}
 
     //this is the start game method GUYS!!
     function startGame() {
@@ -108,7 +136,7 @@
         quiz = shuffle(quiz);
         localStorage.setItem("quiz", JSON.stringify(quiz));
         showQuestion();
-    }
+}
 
     //this is the show questions method guys!!
     function showQuestion() {
@@ -132,7 +160,7 @@
             document.getElementById("btn2").innerText = q.answers[2];
             document.getElementById("btn3").innerText = q.answers[3];
         }
-    }
+}
 
     //THIS is the check answer method guys!!
     function checkAnswer(selectedIndex) {
@@ -141,53 +169,52 @@
         let feedback = document.getElementById("feedback");
 
         if (selectedIndex == q.correct) {
-        score++;
-        const scoreElement = document.getElementById("score");
-        if(scoreElement) scoreElement.innerText = score;
-        if(feedback) feedback.innerText = "Correct!";
-    } else {
-        if(feedback) feedback.innerText = "Wrong!";
-    }
+            score++;
+            const scoreElement = document.getElementById("score");
+            if(scoreElement) scoreElement.innerText = score;
+            if(feedback) feedback.innerText = "Correct!";
+        } else {
+            if(feedback) feedback.innerText = "Wrong!";
+        }
 
-    toggleButtons(true);
-    setTimeout(() => { nextQuestion(); }, 1500);
-    }
+        toggleButtons(true);
+        setTimeout(() => { nextQuestion(); }, 1500);
+}
 
     function nextQuestion() {
-    let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
+        let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
         currentQuestionIndex++;
 
-    if (currentQuestionIndex < quiz.length) {
-         showQuestion();
+        if (currentQuestionIndex < quiz.length) {
+            showQuestion();
         } else {
-     localStorage.setItem("lastScore", score);
-        window.location.href = "Scores.html";
+            localStorage.setItem("lastScore", score);
+            window.location.href = "Scores.html";
         }
-    }
+}
 
     function toggleButtons(status) {
-    for (let i = 0; i < 4; i++) {
-    let btn = document.getElementById("btn" + i);
+        for (let i = 0; i < 4; i++) {
+            let btn = document.getElementById("btn" + i);
             if(btn) btn.disabled = status;
         }
-    }
+}
 
     function displayFinalScore() {
-    let finalScore = localStorage.getItem("lastScore") || 0;
-    const scoreDisplay = document.getElementById("final-score-display");
+        let finalScore = localStorage.getItem("lastScore") || 0;
+        const scoreDisplay = document.getElementById("final-score-display");
         if (scoreDisplay) {
             scoreDisplay.innerText = finalScore;
         }
-    }
+}
 
     function loadRandomFact() {
-    const factElement = document.getElementById("fact-text");
-    if (factElement) {
-    const randomIndex = Math.floor(Math.random() * funFacts.length);
-        factElement.innerText = funFacts[randomIndex];
+        const factElement = document.getElementById("fact-text");
+        if (factElement) {
+            const randomIndex = Math.floor(Math.random() * funFacts.length);
+            factElement.innerText = funFacts[randomIndex];
         }
-    }
-
+}
 
     window.onload = function() {
         loadQuizList();
@@ -198,7 +225,7 @@
         } else if (window.location.href.includes("Scores.html")) {
             displayFinalScore();
         }
-    }
+};
 
     function shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -206,4 +233,4 @@
             [array[i], array[j]] = [array[j], array[i]];
         }
         return array;
-};
+}
