@@ -26,7 +26,8 @@ const funFacts = [
     "Explaining a topic to someone else (or your pet) is the best way to learn it!",
     "Sleeping after studying helps 'cement' the information into your long-term memory.",
     "The 'Spacing Effect' means studying 15 mins a day is better than 3 hours once a week.",
-    "Cursive writing helps the brain process information more deeply than typing."
+    "Cursive writing helps the brain process information more deeply than typing.",
+    "Shoutout to my girlfriend. I love you <3",
 ];
 
 //This is the save questions system guys!!
