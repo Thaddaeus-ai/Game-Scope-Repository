@@ -187,6 +187,7 @@
         }
     }
 
+
     window.onload = function() {
         loadQuizList();
         loadRandomFact();
@@ -196,7 +197,7 @@
         } else if (window.location.href.includes("Scores.html")) {
             displayFinalScore();
         }
-};
+    }
 
     function shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -204,4 +205,4 @@
             [array[i], array[j]] = [array[j], array[i]];
         }
         return array;
-}
+};
