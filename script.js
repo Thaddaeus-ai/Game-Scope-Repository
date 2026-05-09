@@ -185,9 +185,8 @@
     const randomIndex = Math.floor(Math.random() * funFacts.length);
         factElement.innerText = funFacts[randomIndex];
         }
-}
+    }
 
-    // COMBINED WINDOW ONLOAD - THIS IS THE FIX
     window.onload = function() {
         loadQuizList();
         loadRandomFact();
