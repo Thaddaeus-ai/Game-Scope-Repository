@@ -27,25 +27,6 @@ function saveQuestion() {
     const cIndex = document.getElementById("correctIndex");
 
     if (!qInput.value || !a1.value || !a2.value || !a3.value || !a4.value) {
-    alert("Please fill in all fields!");
-    return;
-    }
-
-    let newQuestion = {
-        id: Date.now(),
-        question: qInput.value,
-        answers: [a1.value, a2.value, a3.value, a4.value],
-        correct: parseInt(cIndex.value) 
-    };
-
-    let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
-        quiz.push(newQuestion);
-        localStorage.setItem("quiz", JSON.stringify(quiz));
-
-    alert("Question saved!");
-        qInput.value = ""; a1.value = ""; a2.value = ""; a3.value = ""; a4.value = "";
-
-    if (!qInput.value || !a1.value || !a2.value || !a3.value || !a4.value) {
         alert("Please fill in all fields!");
         return;
     }
@@ -85,7 +66,7 @@ function showQuestion() {
     const progressText = document.getElementById("progress-text");
     if(progressText) {
         progressText.innerText = "Question " + (currentQuestionIndex + 1) + " of " + quiz.length;
-}
+    }
     const feedback = document.getElementById("feedback");
     if(feedback) feedback.innerText = "";
     
@@ -93,11 +74,11 @@ function showQuestion() {
 
     const qText = document.getElementById("question-text");
     if(qText) {
-    qText.innerText = q.question;
-    document.getElementById("btn0").innerText = q.answers[0];
-    document.getElementById("btn1").innerText = q.answers[1];
-    document.getElementById("btn2").innerText = q.answers[2];
-    document.getElementById("btn3").innerText = q.answers[3];
+        qText.innerText = q.question;
+        document.getElementById("btn0").innerText = q.answers[0];
+        document.getElementById("btn1").innerText = q.answers[1];
+        document.getElementById("btn2").innerText = q.answers[2];
+        document.getElementById("btn3").innerText = q.answers[3];
     }
 }
 
@@ -108,19 +89,9 @@ function checkAnswer(selectedIndex) {
     let feedback = document.getElementById("feedback");
 
     if (selectedIndex == q.correct) {
-    score++;
-    document.getElementById("score").innerText = score;
-    if(feedback) feedback.innerText = "Correct!";
-    } else {
-    if(feedback) feedback.innerText = "Wrong!";
-    }
-
-    toggleButtons(true);
-    setTimeout(() => { nextQuestion(); }, 1500);
-
-    if (selectedIndex == q.correct) {
         score++;
-        document.getElementById("score").innerText = score;
+        const scoreElement = document.getElementById("score");
+        if(scoreElement) scoreElement.innerText = score;
         if(feedback) feedback.innerText = "Correct!";
     } else {
         if(feedback) feedback.innerText = "Wrong!";
@@ -130,17 +101,9 @@ function checkAnswer(selectedIndex) {
     setTimeout(() => { nextQuestion(); }, 1500);
 }
 
-
 function nextQuestion() {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     currentQuestionIndex++;
-
-    if (currentQuestionIndex < quiz.length) {
-    showQuestion();
-    } else {
-    localStorage.setItem("lastScore", score);
-    window.location.href = "Scores.html";
-}
 
     if (currentQuestionIndex < quiz.length) {
         showQuestion();
@@ -172,7 +135,6 @@ window.onload = function() {
         displayFinalScore();
     }
 };
-
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
