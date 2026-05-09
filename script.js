@@ -108,6 +108,17 @@ function checkAnswer(selectedIndex) {
     let feedback = document.getElementById("feedback");
 
     if (selectedIndex == q.correct) {
+    score++;
+    document.getElementById("score").innerText = score;
+    if(feedback) feedback.innerText = "Correct!";
+    } else {
+    if(feedback) feedback.innerText = "Wrong!";
+    }
+
+    toggleButtons(true);
+    setTimeout(() => { nextQuestion(); }, 1500);
+
+    if (selectedIndex == q.correct) {
         score++;
         document.getElementById("score").innerText = score;
         if(feedback) feedback.innerText = "Correct!";
@@ -123,6 +134,13 @@ function checkAnswer(selectedIndex) {
 function nextQuestion() {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     currentQuestionIndex++;
+
+    if (currentQuestionIndex < quiz.length) {
+    showQuestion();
+    } else {
+    localStorage.setItem("lastScore", score);
+    window.location.href = "Scores.html";
+}
 
     if (currentQuestionIndex < quiz.length) {
         showQuestion();
