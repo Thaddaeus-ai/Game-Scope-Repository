@@ -13,12 +13,12 @@
 
 function checkLogin() {
     if (localStorage.getItem("isLoggedIn") !== "true") {
-        window.location.href = "login.html";
+        window.location.href = "index.html";
     }
 }
 
 // Run this on every page load except login/signup
-if (!window.location.href.includes("login.html") && !window.location.href.includes("signup.html")) {
+if (!window.location.href.includes("index.html") && !window.location.href.includes("signup.html")) {
     checkLogin();
 }
 
@@ -278,5 +278,5 @@ function logout() {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("currentUser");
     alert("Logged out!");
-    window.location.href = "login.html";
+    window.location.href = "index.html";
 }

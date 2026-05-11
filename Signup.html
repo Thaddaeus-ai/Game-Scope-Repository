@@ -96,7 +96,7 @@
     <input type="text" id="regUser" placeholder="Choose Username">
     <input type="password" id="regPass" placeholder="Choose Password">
     <button onclick="signup()">CREATE ACCOUNT</button>
-    <p>Already have an account? <a href="login.html">LOGIN</a></p>
+    <p>Already have an account? <a href="index.html">LOGIN</a></p>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -116,7 +116,7 @@
 
         if (response.ok) {
           alert("Account Created! Please Login.");
-          window.location.href = "login.html";
+          window.location.href = "index.html";
         } else {
           alert("Error: Username might be taken.");
         }
