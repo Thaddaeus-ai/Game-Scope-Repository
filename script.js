@@ -11,7 +11,7 @@
     // --- CONFIGURATION ---
 // When you get your link from Render, paste it here! 
 // Example: "https://game-scope.onrender.com"
-const BASE_URL = "http://localhost:3000"; 
+const BASE_URL = "https://game-scope-repository.onrender.com"; 
 
 //this is the remove previous questions when closed function guys!
 if (!sessionStorage.getItem("sessionStarted")) {
