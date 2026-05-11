@@ -282,23 +282,26 @@ function nextQuestion() {
     if (currentQuestionIndex < quiz.length) {
         showQuestion();
     } else {
-        localStorage.setItem("lastScore", score);
-        window.location.href = "Scores.html";
+    localStorage.setItem("lastScore", score); 
+        
+     window.location.href = "Scores.html"; 
     }
 }
-
 function toggleButtons(status) {
     for (let i = 0; i < 4; i++) {
-        let btn = document.getElementById("btn" + i);
-        if(btn) btn.disabled = status;
+    let btn = document.getElementById("btn" + i);
+    if(btn) btn.disabled = status;
     }
 }
 
 function displayFinalScore() {
     let finalScore = localStorage.getItem("lastScore") || 0;
+    
+    console.log("Displaying Final Score: " + finalScore);
     const scoreDisplay = document.getElementById("final-score-display");
+    
     if (scoreDisplay) {
-        scoreDisplay.innerText = finalScore;
+    scoreDisplay.innerText = finalScore;
     }
 }
 
@@ -311,12 +314,15 @@ function loadRandomFact() {
 }
 
 window.onload = function() {
-    loadQuizList();
-    loadRandomFact();
+    // These run on every page
+    if (typeof loadQuizList === "function") loadQuizList();
+    if (typeof loadRandomFact === "function") loadRandomFact();
+    const currentPath = window.location.href.toLowerCase();
 
-    if (window.location.href.includes("GSQP.html")) {
+    if (currentPath.includes("gsqp.html")) {
         startGame();
-    } else if (window.location.href.includes("Scores.html")) {
+    } 
+    else if (currentPath.includes("Scores.html")) {
         displayFinalScore();
     }
 };
