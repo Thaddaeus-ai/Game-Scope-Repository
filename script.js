@@ -203,16 +203,19 @@ function showQuestion() {
     }
 }
 
+// THIS is the check answer method guys!!
 function checkAnswer(selectedIndex) {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     let q = quiz[currentQuestionIndex];
     let feedback = document.getElementById("feedback");
 
     if (selectedIndex == q.correct) {
-        score++;
+        // made so taht it will add +5 to every correct answer!
+        score += 5; 
+        
         const scoreElement = document.getElementById("score");
         if(scoreElement) scoreElement.innerText = score;
-        if(feedback) feedback.innerText = "Correct!";
+        if(feedback) feedback.innerText = "Correct! +5 Points";
     } else {
         if(feedback) feedback.innerText = "Wrong!";
     }
@@ -221,6 +224,7 @@ function checkAnswer(selectedIndex) {
     setTimeout(() => { nextQuestion(); }, 1500);
 }
 
+//this is the next question method!
 function nextQuestion() {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     currentQuestionIndex++;
