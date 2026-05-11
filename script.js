@@ -228,6 +228,7 @@ function startSelectedQuiz() {
 }
 
 function startGame() {
+    score = 0;
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     if (quiz.length === 0) {
         window.location.href = "GSAQ.html";
@@ -258,6 +259,7 @@ function showQuestion() {
     }
 }
 
+//this method checks if the answer is correct chat!
 function checkAnswer(selectedIndex) {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     let q = quiz[currentQuestionIndex];
@@ -283,12 +285,12 @@ function nextQuestion() {
     if (currentQuestionIndex < quiz.length) {
         showQuestion();
     } else {
-        // Save score and move to results (Using Capital S for filename)
+
         localStorage.setItem("lastScore", score); 
+        console.log("Quiz finished. Saving score: " + score);
         window.location.href = "Scores.html"; 
     }
 }
-
 function toggleButtons(status) {
     for (let i = 0; i < 4; i++) {
         let btn = document.getElementById("btn" + i);
@@ -297,10 +299,15 @@ function toggleButtons(status) {
 }
 
 function displayFinalScore() {
-    let finalScore = localStorage.getItem("lastScore") || 0;
+    let finalScore = localStorage.getItem("lastScore");
+    
+    if (finalScore === null) {
+        finalScore = 0;
+    }
     const scoreDisplay = document.getElementById("final-score-display");
     if (scoreDisplay) {
         scoreDisplay.innerText = finalScore;
+        console.log("Score displayed successfully: " + finalScore);
     }
 }
 
