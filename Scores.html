@@ -1,38 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
-  <title>Scores!</title>
+  <title>Quiz Results!</title>
+  <style>
+  
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #fffdf1;
+  }
 
-      <style>
-        .G2BackButton {
-          text-align:CENTER; font-size: 30px; padding: 5px 10px; Background-color: 
-          #7338a0; color: #FFFFFF; border: 2px; Width: 300px; height: 100px; border-radius: 12px; Margin-top: 30px;
-          font-weight: bold; cursor: pointer;
-        }
-      </style>
+    .score-box {
+      position: relative; width: 400px; height: 300px; background-color: #5e1a92;
+      border-radius: 20px; border: 4px solid #7338a0; box-shadow: 0px 10px 40px rgba(0,0,0,0.4);
+      display: flex; flex-direction: column; justify-content: center;
+      align-items: center; color: white;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+    }
+
+    h1 {
+      background-color: transparent;
+      font-size: 28px;
+      margin-bottom: 5px;
+  }
+
+    .score-label {
+      color: #dec9f1;
+      font-size: 18px;
+  }
+
+    #final-score-display {
+    font-size: 100px; font-weight: bold;
+      margin: 10px 0;
+      text-shadow: 0 0 15px rgba(255,255,255,0.3);
+}
+
+    .small-back-btn {
+      position: absolute; bottom: 15px; right: 15px; padding: 6px 14px; background-color: #7338a0;
+      color: white; border: 1px solid #c2a5df; border-radius: 6px; font-size: 13px;
+      font-weight: bold; cursor: pointer;
+      transition: 0.2s;
+  }
+
+    .small-back-btn:hover {
+      background-color: #924dbf;
+      transform: scale(1.05);
+  }
+
+   footer {
+      text-align: center;  background-color: #924DBF; 
+      padding: 20px 0; position: fixed;  width: 100%;
+      bottom: 0; color: white;
+      font-family: sans-serif;
+      font-size: 14px;
+      left: 0;
+    }
+  </style>
+
 </head>
 
+
 <body>
-  <a href=""></a>
-  <h1 style="text-align: center;">
-    Quiz Results!
-  </h1>
 
-  <div>
+  <div class="score-box">
+    <h1>QUIZ DONE!</h1>
+    <p class="score-label">Final Score</p>
+    
+    <div id="final-score-display">0</div>
 
+    <button class="small-back-btn" onclick="location.href='Game_Scope.html'">Go Back</button>
   </div>
-  <table>
-    <th><button class="G2BackButton" onclick="location.href='Game_Scope.html'">Go back</button></th>
-  </table>
-  
-
 
   <script src="script.js"></script>
-  <footer> &copy; 2026 Quiz Reviewer. All rights reserved. </footer>
+<footer> &copy; 2026 Quiz Reviewer. All rights reserved. </footer>
 </body>
-
 </html>
