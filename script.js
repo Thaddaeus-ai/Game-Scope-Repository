@@ -1,35 +1,41 @@
 //This is the to do list
-        //Question Text: Needs id="question-text"
-        //Buttons: Needs IDs btn0, btn1, btn2, btn3 and class="StartButton" (to use your purple CSS).
-        //Feedback: Needs<p id="feedback"></p
-        //score:Needs<span id="score">0</span
+//Question Text: Needs id="question-text"
+//Buttons: Needs IDs btn0, btn1, btn2, btn3 and class="StartButton" (to use your purple CSS).
+//Feedback: Needs<p id="feedback"></p
+//score:Needs<span id="score">0</span
 
-        //Go to the bottom of the script: Add }; right after the displayFinalScore(); line and before function shuffle. DONE
-        //Make the save quiz work and save in database. DONE
-        //add log in and log out page. DONE
-        //Go to showQuestion: Delete the duplicate let quiz and let q lines. DONE
-        // to saveQuestion: Add the other answer IDs to your if check. DONE
+//Go to the bottom of the script: Add }; right after the displayFinalScore(); line and before function shuffle. DONE
+//Make the save quiz work and save in database. DONE
+//add log in and log out page. DONE
+//Go to showQuestion: Delete the duplicate let quiz and let q lines. DONE
+// to saveQuestion: Add the other answer IDs to your if check. DONE
 
 
 function checkLogin() {
-    // ONLY redirect if we are NOT on index.html and NOT on signup.html
-    const path = window.location.pathname;
+    // We normalize the path to lowercase to prevent GitHub casing errors
+    const path = window.location.pathname.toLowerCase();
     const isLoggedIn = localStorage.getItem("isLoggedIn");
 
-    // If we are on the game pages but not logged in, go to login
-    if (!path.includes("index.html") && !path.includes("signup.html") && path !== "/" ) {
+    // Identify if we are currently on an authentication page (login or signup)
+    const isLoginPage = path.endsWith("index.html") || path.endsWith("/") || path === "";
+    const isSignupPage = path.includes("signup.html");
+
+    // If we are NOT on login/signup, but we ARE NOT logged in -> Go to login
+    if (!isLoginPage && !isSignupPage) {
         if (isLoggedIn !== "true") {
             window.location.href = "index.html";
         }
     }
+    // If we ARE on the login page but ALREADY logged in -> Go to game automatically
+    else if (isLoginPage && isLoggedIn === "true") {
+        window.location.href = "Game_Scope.html";
+    }
 }
 
-// We check for "/" or "index.html" to identify the login page
-const path = window.location.pathname;
-if (path.includes("Game_Scope.html") || path.includes("GSAQ.html") || path.includes("GSQP.html") || path.includes("Scores.html")) {
-    checkLogin();
-}
+// Run the login check immediately
+checkLogin();
 
+// --- CONFIGURATION ---
 const BASE_URL = "https://game-scope-backend.onrender.com"; 
 
 // this is the remove previous questions when closed function guys!
@@ -113,7 +119,6 @@ const funFacts = [
     "You are doing a great job! Keep learning and building cool things!",
 ];
 
-// This is the save questions system guys!! (UPDATED FOR MONGODB & USER ACCOUNTS)
 async function saveQuestion() {
     const qInput = document.getElementById("question");
     const a1 = document.getElementById("a1");
@@ -253,16 +258,13 @@ function showQuestion() {
     }
 }
 
-// THIS is the check answer method guys!!
 function checkAnswer(selectedIndex) {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     let q = quiz[currentQuestionIndex];
     let feedback = document.getElementById("feedback");
 
     if (selectedIndex == q.correct) {
-        // made so taht it will add +5 to every correct answer!
         score += 5; 
-        
         const scoreElement = document.getElementById("score");
         if(scoreElement) scoreElement.innerText = score;
         if(feedback) feedback.innerText = "Correct! +5 Points";
@@ -274,7 +276,6 @@ function checkAnswer(selectedIndex) {
     setTimeout(() => { nextQuestion(); }, 1500);
 }
 
-//this is the next question method!
 function nextQuestion() {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     currentQuestionIndex++;
@@ -282,26 +283,24 @@ function nextQuestion() {
     if (currentQuestionIndex < quiz.length) {
         showQuestion();
     } else {
-    localStorage.setItem("lastScore", score); 
-        
-     window.location.href = "Scores.html"; 
+        // Save score and move to results (Using Capital S for filename)
+        localStorage.setItem("lastScore", score); 
+        window.location.href = "Scores.html"; 
     }
 }
+
 function toggleButtons(status) {
     for (let i = 0; i < 4; i++) {
-    let btn = document.getElementById("btn" + i);
-    if(btn) btn.disabled = status;
+        let btn = document.getElementById("btn" + i);
+        if(btn) btn.disabled = status;
     }
 }
 
 function displayFinalScore() {
     let finalScore = localStorage.getItem("lastScore") || 0;
-    
-    console.log("Displaying Final Score: " + finalScore);
     const scoreDisplay = document.getElementById("final-score-display");
-    
     if (scoreDisplay) {
-    scoreDisplay.innerText = finalScore;
+        scoreDisplay.innerText = finalScore;
     }
 }
 
@@ -314,15 +313,16 @@ function loadRandomFact() {
 }
 
 window.onload = function() {
-    // These run on every page
-    if (typeof loadQuizList === "function") loadQuizList();
-    if (typeof loadRandomFact === "function") loadRandomFact();
-    const currentPath = window.location.href.toLowerCase();
+    loadQuizList();
+    loadRandomFact();
 
-    if (currentPath.includes("gsqp.html")) {
+    const currentURL = window.location.href.toLowerCase();
+
+    if (currentURL.includes("gsqp.html")) {
         startGame();
     } 
-    else if (currentPath.includes("Scores.html")) {
+    // We check lowercase, but redirect using Capital S above
+    else if (currentURL.includes("scores.html")) {
         displayFinalScore();
     }
 };
