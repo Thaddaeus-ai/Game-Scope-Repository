@@ -4,19 +4,17 @@
         //Feedback: Needs<p id="feedback"></p
         //score:Needs<span id="score">0</span
 
-        //Go to the bottom of the script: Add }; right after the displayFinalScore(); line and before function shuffle.
-        //Go to showQuestion: Delete the duplicate let quiz and let q lines.
-        // to saveQuestion: Add the other answer IDs to your if check.
+        //Go to the bottom of the script: Add }; right after the displayFinalScore(); line and before function shuffle. DONE
+        //Make the save quiz work and save in database.
+        //add log in and log out page.
+        //Go to showQuestion: Delete the duplicate let quiz and let q lines. DONE
+        // to saveQuestion: Add the other answer IDs to your if check. DONE
 
-    // --- CONFIGURATION ---
-// When you get your link from Render, paste it here! 
-// Example: "https://game-scope.onrender.com"
-const PORT = process.env.PORT || 10000; // Render likes port 10000
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-});
+// --- CONFIGURATION ---
+// This tells the browser where to find your Render engine
+const BASE_URL = "https://game-scope-backend.onrender.com"; 
 
-//this is the remove previous questions when closed function guys!
+// this is the remove previous questions when closed function guys!
 if (!sessionStorage.getItem("sessionStarted")) {
     localStorage.removeItem("quiz");
     sessionStorage.setItem("sessionStarted", "true");
@@ -24,7 +22,7 @@ if (!sessionStorage.getItem("sessionStarted")) {
 
 let currentQuestionIndex = 0;
 let score = 0;
-//Tracker for which quiz is selected lol
+// Tracker for which quiz is selected lol
 let selectedQuizName = null;
 
 const funFacts = [
@@ -48,7 +46,7 @@ const funFacts = [
     "Shoutout to my girlfriend! I love you <3 Shoutout to the team for pulling this off <3 !!"
 ];
 
-//This is the save questions system guys!! (UPDATED FOR MONGODB)
+// This is the save questions system guys!! (UPDATED FOR MONGODB)
 async function saveQuestion() {
     const qInput = document.getElementById("question");
     const a1 = document.getElementById("a1");
@@ -88,7 +86,7 @@ async function saveQuestion() {
     }
 }
 
-//this is for showing all the quizzes in the box (UPDATED FOR MONGODB)
+// this is for showing all the quizzes in the box (UPDATED FOR MONGODB)
 async function loadQuizList() {
     const listDiv = document.getElementById("quiz-list");
     if (!listDiv) return;
@@ -100,7 +98,6 @@ async function loadQuizList() {
         listDiv.innerHTML = "";
 
         allQuizzes.forEach(quiz => {
-            // Container for the quiz button and delete button
             const container = document.createElement("div");
             container.style.display = "flex";
             container.style.gap = "10px";
@@ -113,8 +110,6 @@ async function loadQuizList() {
             btn.onclick = function() {
                 document.querySelectorAll('.quiz-item').forEach(b => b.classList.remove('selected-quiz'));
                 btn.classList.add('selected-quiz');
-                
-                // Save the questions to local memory just for the game logic
                 localStorage.setItem("quiz", JSON.stringify(quiz.questions));
                 selectedQuizName = quiz.quizName;
             };
@@ -147,17 +142,14 @@ async function deleteQuiz(name) {
     }
 }
 
-//Logic to start the specific selected quiz
 function startSelectedQuiz() {
     if (!selectedQuizName) {
         alert("Please select a quiz from the list first!");
         return;
     }
-    // Questions are already in localStorage from the btn.onclick above
     window.location.href = "GSQP.html";
 }
 
-//this is the start game method GUYS!!
 function startGame() {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     if (quiz.length === 0) {
@@ -169,15 +161,10 @@ function startGame() {
     showQuestion();
 }
 
-//this is the show questions method guys!!
 function showQuestion() {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     let q = quiz[currentQuestionIndex];
 
-    const progressText = document.getElementById("progress-text");
-    if(progressText) {
-        progressText.innerText = "Question " + (currentQuestionIndex + 1) + " of " + quiz.length;
-    }
     const feedback = document.getElementById("feedback");
     if(feedback) feedback.innerText = "";
     
@@ -193,7 +180,6 @@ function showQuestion() {
     }
 }
 
-//THIS is the check answer method guys!!
 function checkAnswer(selectedIndex) {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     let q = quiz[currentQuestionIndex];

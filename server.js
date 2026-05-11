@@ -1,17 +1,19 @@
-// 1. IMPORTS
+//data base is finally working YESS YESS YESS
+
+// 1. IMPORTS (Must be at the very top)
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+// 2. INITIALIZE APP
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // 3. DATABASE CONNECTION
-// This is the SRV version - much better for Render
+// Using the SRV version which worked for your Render build
 const mongoURI = "mongodb+srv://Daeus:GameScope2026@gamescope.audxbez.mongodb.net/QuizData?retryWrites=true&w=majority&appName=GameScope";
 
-// Update the connection code to be cleaner for the cloud:
 mongoose.connect(mongoURI)
   .then(() => console.log("✅ SUCCESS: Connected to MongoDB Atlas!"))
   .catch((err) => {
@@ -19,7 +21,7 @@ mongoose.connect(mongoURI)
     console.log("Error Message:", err.message);
   });
 
-// 4. SCHEMA
+// 4. SCHEMA (Defining the data structure)
 const quizSchema = new mongoose.Schema({
     quizName: String,
     questions: [{
@@ -31,6 +33,12 @@ const quizSchema = new mongoose.Schema({
 const Quiz = mongoose.model('Quiz', quizSchema);
 
 // 5. ROUTES
+// Home Route (to prevent "Cannot GET /" error)
+app.get('/', (req, res) => {
+    res.send("🚀 Game Scope Server is Online!");
+});
+
+// Get all quizzes
 app.get('/api/quizzes', async (req, res) => {
     try {
         const allQuizzes = await Quiz.find();
@@ -38,6 +46,7 @@ app.get('/api/quizzes', async (req, res) => {
     } catch (err) { res.status(500).send(err); }
 });
 
+// Save a question
 app.post('/api/save-question', async (req, res) => {
     const { quizName, questionData } = req.body;
     try {
@@ -52,6 +61,7 @@ app.post('/api/save-question', async (req, res) => {
     } catch (err) { res.status(500).send(err); }
 });
 
+// Delete a quiz
 app.delete('/api/quiz/:name', async (req, res) => {
     try {
         await Quiz.findOneAndDelete({ quizName: req.params.name });
@@ -59,6 +69,8 @@ app.delete('/api/quiz/:name', async (req, res) => {
     } catch (err) { res.status(500).send(err); }
 });
 
-// 6. START SERVER (Updated for Render)
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+// 6. START SERVER (Only at the very bottom)
+const PORT = process.env.PORT || 10000; 
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+});
