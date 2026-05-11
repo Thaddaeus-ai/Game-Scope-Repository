@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Game Scope</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <style>
+  
+  * { 
+      margin: 0; padding: 0; 
+    box-sizing: border-box; 
+    font-family: Arial, sans-serif; 
+  }
+
+  body { 
+      height: 100vh; display: flex; 
+  justify-content: center; align-items: center; 
+  background: linear-gradient(180deg,#2d008f,#8b00ff); 
+  overflow: hidden; color: white; 
+  }
+
+  .container { 
+      width: 450px; padding: 40px; border-radius: 25px; 
+  background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.2); 
+  backdrop-filter: blur(10px); text-align: center; 
+  position: relative; z-index: 10;
+  }
+  
+  h1 { 
+    font-size: 50px; 
+    margin-bottom: 35px; 
+  }
+  
+  input { 
+      width: 100%; padding: 15px; 
+      margin-bottom: 20px; border: none; 
+      outline: none; border-radius: 30px; 
+      background: rgba(255,255,255,0.1); 
+      border: 2px solid rgba(255,255,255,0.2); color: white; 
+      font-size: 18px; 
+  }
+  
+  button { 
+    width: 100%; padding: 15px; 
+    border: none; border-radius: 30px; 
+    background: white; color: #5d2de1; 
+  font-size: 20px; font-weight: bold; cursor: pointer; 
+  transition: 0.3s; 
+  }
+  
+  button:hover { 
+  transform: scale(1.05); 
+  background: #eee; 
+  }
+  
+  p { 
+  margin-top: 20px; 
+  }
+
+  a {
+    color: white; font-weight: 
+    bold; text-decoration: none; 
+  }
+  </style>
+</head>
+<body>
+
+<div id="retrobg">
+    <div id="retrobg-sky">
+      <div id="retrobg-stars">
+      <div class="retrobg-star" style="left:5%; top:55%; transform:scale(2);"></div>
+
+      <div class="retrobg-star" style="left:45%; top:30%; transform:scale(3);"></div>
+
+      <div class="retrobg-star" style="left:98%; top:70%; transform:scale(3);"></div>
+    </div>
+
+    <div id="retrobg-sunWrap"><div id="retrobg-sun"></div></div>
+    <div id="retrobg-mountains">
+
+    <div id="retrobg-mountains-left" class="retrobg-mountain"></div>
+
+    <div id="retrobg-mountains-right" class="retrobg-mountain"></div>
+
+      </div>
+      <div id="retrobg-cityWrap"><div id="retrobg-city"></div></div>
+    </div>
+
+    <div id="retrobg-ground"><div id="retrobg-linesWrap"></div></div>
+</div>
+
+<div class="container">
+    <h1>Sign Up</h1>
+    <input type="text" id="regUser" placeholder="Choose Username">
+    <input type="password" id="regPass" placeholder="Choose Password">
+    <button onclick="signup()">CREATE ACCOUNT</button>
+    <p>Already have an account? <a href="index.html">LOGIN</a></p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    const BASE_URL = "https://game-scope-backend.onrender.com"; 
+
+    async function signup() {
+      const username = $("#regUser").val();
+      const password = $("#regPass").val();
+
+      try {
+        const response = await fetch(`${BASE_URL}/api/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (response.ok) {
+          alert("Account Created! Please Login.");
+          window.location.href = "index.html";
+        } else {
+          alert("Error: Username might be taken.");
+        }
+      } catch (err) {
+        alert("Backend server is offline!");
+      }
+    }
+</script>
+
+<footer> &copy; 2026 Quiz Reviewer. All rights reserved. </footer>
+
+</body>
+</html>
