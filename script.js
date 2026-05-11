@@ -12,18 +12,24 @@
 
 
 function checkLogin() {
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-        window.location.href = "index.html";
+    // ONLY redirect if we are NOT on index.html and NOT on signup.html
+    const path = window.location.pathname;
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+    // If we are on the game pages but not logged in, go to login
+    if (!path.includes("index.html") && !path.includes("signup.html") && path !== "/" ) {
+        if (isLoggedIn !== "true") {
+            window.location.href = "index.html";
+        }
     }
 }
 
-// Run this on every page load except login/signup
-if (!window.location.href.includes("index.html") && !window.location.href.includes("signup.html")) {
+// We check for "/" or "index.html" to identify the login page
+const path = window.location.pathname;
+if (path.includes("Game_Scope.html") || path.includes("GSAQ.html") || path.includes("GSQP.html") || path.includes("Scores.html")) {
     checkLogin();
 }
 
-// --- CONFIGURATION ---
-// This tells the browser where to find your Render engine
 const BASE_URL = "https://game-scope-backend.onrender.com"; 
 
 // this is the remove previous questions when closed function guys!
@@ -34,7 +40,6 @@ if (!sessionStorage.getItem("sessionStarted")) {
 
 let currentQuestionIndex = 0;
 let score = 0;
-// Tracker for which quiz is selected lol
 let selectedQuizName = null;
 
 const funFacts = [
@@ -67,7 +72,6 @@ async function saveQuestion() {
     const a4 = document.getElementById("a4");
     const cIndex = document.getElementById("correctIndex");
     
-    // Get the logged in user's name
     const currentUser = localStorage.getItem("currentUser");
 
     if (!qInput.value || !a1.value || !a2.value || !a3.value || !a4.value) {
@@ -84,7 +88,6 @@ async function saveQuestion() {
         correct: parseInt(cIndex.value) 
     };
 
-    // SEND TO BACKEND (Attached with Username)
     try {
         const response = await fetch(`${BASE_URL}/api/save-question`, {
             method: 'POST',
@@ -92,7 +95,7 @@ async function saveQuestion() {
             body: JSON.stringify({ 
                 quizName, 
                 questionData,
-                username: currentUser // This saves it to YOUR account
+                username: currentUser 
             })
         });
 
@@ -105,7 +108,6 @@ async function saveQuestion() {
     }
 }
 
-// this is for showing all the quizzes in the box (UPDATED FOR USER ACCOUNTS)
 async function loadQuizList() {
     const listDiv = document.getElementById("quiz-list");
     if (!listDiv) return;
@@ -113,7 +115,6 @@ async function loadQuizList() {
     const currentUser = localStorage.getItem("currentUser");
 
     try {
-        // Fetch only quizzes belonging to the current user
         const response = await fetch(`${BASE_URL}/api/quizzes?username=${currentUser}`);
         const allQuizzes = await response.json();
         
@@ -153,7 +154,6 @@ async function loadQuizList() {
     }
 }
 
-// Function to delete a quiz (UPDATED FOR MONGODB)
 async function deleteQuiz(name) {
     if (confirm("Are you sure you want to delete '" + name + "'?")) {
         await fetch(`${BASE_URL}/api/quiz/${name}`, { method: 'DELETE' });
@@ -185,6 +185,7 @@ function startGame() {
 
 function showQuestion() {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
+    if (!quiz[currentQuestionIndex]) return;
     let q = quiz[currentQuestionIndex];
 
     const feedback = document.getElementById("feedback");
