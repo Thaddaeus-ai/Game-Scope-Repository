@@ -11,7 +11,10 @@
     // --- CONFIGURATION ---
 // When you get your link from Render, paste it here! 
 // Example: "https://game-scope.onrender.com"
-const BASE_URL = "https://game-scope-repository.onrender.com"; 
+const PORT = process.env.PORT || 10000; // Render likes port 10000
+app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+});
 
 //this is the remove previous questions when closed function guys!
 if (!sessionStorage.getItem("sessionStarted")) {
