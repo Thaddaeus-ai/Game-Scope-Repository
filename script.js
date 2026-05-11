@@ -5,10 +5,22 @@
         //score:Needs<span id="score">0</span
 
         //Go to the bottom of the script: Add }; right after the displayFinalScore(); line and before function shuffle. DONE
-        //Make the save quiz work and save in database.
-        //add log in and log out page.
+        //Make the save quiz work and save in database. DONE
+        //add log in and log out page. DONE
         //Go to showQuestion: Delete the duplicate let quiz and let q lines. DONE
         // to saveQuestion: Add the other answer IDs to your if check. DONE
+
+
+function checkLogin() {
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+        window.location.href = "login.html";
+    }
+}
+
+// Run this on every page load except login/signup
+if (!window.location.href.includes("login.html") && !window.location.href.includes("signup.html")) {
+    checkLogin();
+}
 
 // --- CONFIGURATION ---
 // This tells the browser where to find your Render engine
@@ -46,7 +58,7 @@ const funFacts = [
     "Shoutout to my girlfriend! I love you <3 Shoutout to the team for pulling this off <3 !!"
 ];
 
-// This is the save questions system guys!! (UPDATED FOR MONGODB)
+// This is the save questions system guys!! (UPDATED FOR MONGODB & USER ACCOUNTS)
 async function saveQuestion() {
     const qInput = document.getElementById("question");
     const a1 = document.getElementById("a1");
@@ -54,6 +66,9 @@ async function saveQuestion() {
     const a3 = document.getElementById("a3");
     const a4 = document.getElementById("a4");
     const cIndex = document.getElementById("correctIndex");
+    
+    // Get the logged in user's name
+    const currentUser = localStorage.getItem("currentUser");
 
     if (!qInput.value || !a1.value || !a2.value || !a3.value || !a4.value) {
         alert("Please fill in all fields!");
@@ -69,16 +84,20 @@ async function saveQuestion() {
         correct: parseInt(cIndex.value) 
     };
 
-    // SEND TO BACKEND
+    // SEND TO BACKEND (Attached with Username)
     try {
         const response = await fetch(`${BASE_URL}/api/save-question`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ quizName, questionData })
+            body: JSON.stringify({ 
+                quizName, 
+                questionData,
+                username: currentUser // This saves it to YOUR account
+            })
         });
 
         if (response.ok) {
-            alert("Question saved to Cloud MongoDB!");
+            alert("Question saved to your Cloud account!");
             qInput.value = ""; a1.value = ""; a2.value = ""; a3.value = ""; a4.value = "";
         }
     } catch (err) {
@@ -86,13 +105,16 @@ async function saveQuestion() {
     }
 }
 
-// this is for showing all the quizzes in the box (UPDATED FOR MONGODB)
+// this is for showing all the quizzes in the box (UPDATED FOR USER ACCOUNTS)
 async function loadQuizList() {
     const listDiv = document.getElementById("quiz-list");
     if (!listDiv) return;
 
+    const currentUser = localStorage.getItem("currentUser");
+
     try {
-        const response = await fetch(`${BASE_URL}/api/quizzes`);
+        // Fetch only quizzes belonging to the current user
+        const response = await fetch(`${BASE_URL}/api/quizzes?username=${currentUser}`);
         const allQuizzes = await response.json();
         
         listDiv.innerHTML = "";
@@ -250,4 +272,11 @@ function shuffle(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
+}
+
+function logout() {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("currentUser");
+    alert("Logged out!");
+    window.location.href = "login.html";
 }

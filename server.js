@@ -1,6 +1,7 @@
-//data base is finally working YESS YESS YESS
+// data base is finally working YESS YESS YESS
 
-// 1. IMPORTS (Must be at the very top)
+// 1. IMPORTS
+const bcrypt = require('bcryptjs');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -11,7 +12,6 @@ app.use(cors());
 app.use(express.json());
 
 // 3. DATABASE CONNECTION
-// Using the SRV version which worked for your Render build
 const mongoURI = "mongodb+srv://Daeus:GameScope2026@gamescope.audxbez.mongodb.net/QuizData?retryWrites=true&w=majority&appName=GameScope";
 
 mongoose.connect(mongoURI)
@@ -21,8 +21,9 @@ mongoose.connect(mongoURI)
     console.log("Error Message:", err.message);
   });
 
-// 4. SCHEMA (Defining the data structure)
+// 4. SCHEMAS
 const quizSchema = new mongoose.Schema({
+    username: String, // Tracks which user owns the quiz
     quizName: String,
     questions: [{
         question: String,
@@ -32,27 +33,35 @@ const quizSchema = new mongoose.Schema({
 });
 const Quiz = mongoose.model('Quiz', quizSchema);
 
+const userSchema = new mongoose.Schema({
+    username: { type: String, unique: true, required: true },
+    password: { type: String, required: true }
+});
+const User = mongoose.model('User', userSchema);
+
 // 5. ROUTES
-// Home Route (to prevent "Cannot GET /" error)
+
+// Home Route
 app.get('/', (req, res) => {
     res.send("🚀 Game Scope Server is Online!");
 });
 
-// Get all quizzes
+// Get all quizzes for a SPECIFIC user
 app.get('/api/quizzes', async (req, res) => {
     try {
-        const allQuizzes = await Quiz.find();
+        const { username } = req.query; 
+        const allQuizzes = await Quiz.find({ username: username });
         res.json(allQuizzes);
     } catch (err) { res.status(500).send(err); }
 });
 
-// Save a question
+// Save a question to a specific user's quiz
 app.post('/api/save-question', async (req, res) => {
-    const { quizName, questionData } = req.body;
+    const { quizName, questionData, username } = req.body;
     try {
-        let quiz = await Quiz.findOne({ quizName });
+        let quiz = await Quiz.findOne({ quizName, username });
         if (!quiz) {
-            quiz = new Quiz({ quizName, questions: [questionData] });
+            quiz = new Quiz({ quizName, username, questions: [questionData] });
         } else {
             quiz.questions.push(questionData);
         }
@@ -69,7 +78,36 @@ app.delete('/api/quiz/:name', async (req, res) => {
     } catch (err) { res.status(500).send(err); }
 });
 
-// 6. START SERVER (Only at the very bottom)
+// Register Route
+app.post('/api/signup', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ username, password: hashedPassword });
+        await newUser.save();
+        res.status(201).send({ message: "User created!" });
+    } catch (err) {
+        res.status(400).send({ error: "Username already taken" });
+    }
+});
+
+// Login Route
+app.post('/api/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const user = await User.findOne({ username });
+        if (!user) return res.status(400).send({ error: "User not found" });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).send({ error: "Wrong password" });
+
+        res.send({ message: "Success", username: user.username });
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
+// 6. START SERVER (Always at the bottom)
 const PORT = process.env.PORT || 10000; 
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 Server running on port ${PORT}`);
