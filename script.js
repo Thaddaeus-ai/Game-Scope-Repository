@@ -12,27 +12,24 @@
 
 
 function checkLogin() {
-    // We normalize the path to lowercase to prevent GitHub casing errors
+    // We normalize the path to lowercase
     const path = window.location.pathname.toLowerCase();
     const isLoggedIn = localStorage.getItem("isLoggedIn");
 
-    // Identify if we are currently on an authentication page (login or signup)
-    const isLoginPage = path.endsWith("index.html") || path.endsWith("/") || path === "";
-    const isSignupPage = path.includes("signup.html");
+    // We only want to "Protect" the actual game pages.
+    // If the URL contains any of these, we check if they are logged in.
+    const isGamePage = path.includes("game_scope.html") || 
+                       path.includes("gsaq.html") || 
+                       path.includes("gsqp.html") || 
+                       path.includes("scores.html");
 
-    // If we are NOT on login/signup, but we ARE NOT logged in -> Go to login
-    if (!isLoginPage && !isSignupPage) {
-        if (isLoggedIn !== "true") {
-            window.location.href = "index.html";
-        }
-    }
-    // If we ARE on the login page but ALREADY logged in -> Go to game automatically
-    else if (isLoginPage && isLoggedIn === "true") {
-        window.location.href = "Game_Scope.html";
+    if (isGamePage && isLoggedIn !== "true") {
+        // If they are on a game page but not logged in, send to login (index.html)
+        window.location.href = "index.html";
     }
 }
 
-// Run the login check immediately
+// Run the check
 checkLogin();
 
 // --- CONFIGURATION ---
@@ -163,6 +160,7 @@ async function saveQuestion() {
     }
 }
 
+//this method checks the quiz for the specific account!!
 async function loadQuizList() {
     const listDiv = document.getElementById("quiz-list");
     if (!listDiv) return;
@@ -219,6 +217,7 @@ async function deleteQuiz(name) {
     }
 }
 
+//this loads the quiz selected!
 function startSelectedQuiz() {
     if (!selectedQuizName) {
         alert("Please select a quiz from the list first!");
@@ -227,8 +226,9 @@ function startSelectedQuiz() {
     window.location.href = "GSQP.html";
 }
 
+//this starts the game guys!!!
 function startGame() {
-    score = 0;
+    score = 0; // Reset score to 0 at the start of a game
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     if (quiz.length === 0) {
         window.location.href = "GSAQ.html";
@@ -259,14 +259,13 @@ function showQuestion() {
     }
 }
 
-//this method checks if the answer is correct chat!
 function checkAnswer(selectedIndex) {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     let q = quiz[currentQuestionIndex];
     let feedback = document.getElementById("feedback");
 
     if (selectedIndex == q.correct) {
-        score += 5; 
+        score += 5; // Add 5 points
         const scoreElement = document.getElementById("score");
         if(scoreElement) scoreElement.innerText = score;
         if(feedback) feedback.innerText = "Correct! +5 Points";
@@ -285,12 +284,11 @@ function nextQuestion() {
     if (currentQuestionIndex < quiz.length) {
         showQuestion();
     } else {
-
         localStorage.setItem("lastScore", score); 
-        console.log("Quiz finished. Saving score: " + score);
         window.location.href = "Scores.html"; 
     }
 }
+
 function toggleButtons(status) {
     for (let i = 0; i < 4; i++) {
         let btn = document.getElementById("btn" + i);
@@ -299,15 +297,10 @@ function toggleButtons(status) {
 }
 
 function displayFinalScore() {
-    let finalScore = localStorage.getItem("lastScore");
-    
-    if (finalScore === null) {
-        finalScore = 0;
-    }
+    let finalScore = localStorage.getItem("lastScore") || 0;
     const scoreDisplay = document.getElementById("final-score-display");
     if (scoreDisplay) {
         scoreDisplay.innerText = finalScore;
-        console.log("Score displayed successfully: " + finalScore);
     }
 }
 
@@ -320,16 +313,16 @@ function loadRandomFact() {
 }
 
 window.onload = function() {
-    loadQuizList();
-    loadRandomFact();
+    // Load general data
+    if (typeof loadQuizList === "function") loadQuizList();
+    if (typeof loadRandomFact === "function") loadRandomFact();
 
-    const currentURL = window.location.href.toLowerCase();
+    const path = window.location.pathname.toLowerCase();
 
-    if (currentURL.includes("gsqp.html")) {
+    if (path.includes("gsqp.html")) {
         startGame();
     } 
-    // We check lowercase, but redirect using Capital S above
-    else if (currentURL.includes("scores.html")) {
+    else if (path.includes("scores.html")) {
         displayFinalScore();
     }
 };
