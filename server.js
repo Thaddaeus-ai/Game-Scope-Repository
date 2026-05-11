@@ -8,14 +8,16 @@ app.use(cors());
 app.use(express.json());
 
 // 3. DATABASE CONNECTION
-const mongoURI = "mongodb://Daeus:GameScope2026@gamescope-shard-00-00.audxbez.mongodb.net:27017,gamescope-shard-00-01.audxbez.mongodb.net:27017,gamescope-shard-00-02.audxbez.mongodb.net:27017/QuizData?ssl=true&replicaSet=atlas-m9v8p1-shard-0&authSource=admin&retryWrites=true&w=majority";
+// This is the SRV version - much better for Render
+const mongoURI = "mongodb+srv://Daeus:GameScope2026@gamescope.audxbez.mongodb.net/QuizData?retryWrites=true&w=majority&appName=GameScope";
 
-mongoose.connect(mongoURI, {
-    tlsAllowInvalidCertificates: true,
-    serverSelectionTimeoutMS: 5000
-})
-  .then(() => console.log("✅ Connected to MongoDB Atlas!"))
-  .catch((err) => console.log("❌ Connection Error:", err.message));
+// Update the connection code to be cleaner for the cloud:
+mongoose.connect(mongoURI)
+  .then(() => console.log("✅ SUCCESS: Connected to MongoDB Atlas!"))
+  .catch((err) => {
+    console.log("❌ CONNECTION FAILED!");
+    console.log("Error Message:", err.message);
+  });
 
 // 4. SCHEMA
 const quizSchema = new mongoose.Schema({
