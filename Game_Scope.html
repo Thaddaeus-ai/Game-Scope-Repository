@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
-  <title>Game Scope</title>
+
 
   <style>
         
@@ -34,6 +34,16 @@
   color: #dec9f1;
   text-align: center;
   }
+
+  #welcome-user {
+  text-align: center;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000000;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
 
   #fact-text {
   margin: 0;
@@ -134,12 +144,12 @@
 </head>
 
 <body>
-  <h1>Study smarter. Practice Faster. Score better!</h1>
 
-  <div style="text-align: left; margin-left: 30%; color: #5e1a92; font-size: 50px; margin-top: 20px;
-   font-family: Helvetica Neue, 
-  Helvetica, Arial, sans-serif;""><strong>Game Scope</strong>
-  </div>
+  <header class="top-bar">
+    <div class="game-title"><strong>Game Scope</strong></div>
+  </header>
+
+  <div id="welcome-user"></div>
 
   <div class="main-wrapper">
     <div class="fact-box">

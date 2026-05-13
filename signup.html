@@ -23,7 +23,7 @@
 
   .container { 
       width: 450px; padding: 40px; border-radius: 25px; 
-  background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.2); 
+  background: rgba(75, 32, 32, 0.08); border: 2px solid rgba(255,255,255,0.2); 
   backdrop-filter: blur(10px); text-align: center; 
   position: relative; z-index: 10;
   }
@@ -37,15 +37,15 @@
       width: 100%; padding: 15px; 
       margin-bottom: 20px; border: none; 
       outline: none; border-radius: 30px; 
-      background: rgba(255,255,255,0.1); 
-      border: 2px solid rgba(255,255,255,0.2); color: white; 
+      background: rgba(190, 99, 99, 0.1); 
+      border: 2px solid rgba(87, 80, 20, 0.2); color: white; 
       font-size: 18px; 
   }
   
   button { 
     width: 100%; padding: 15px; 
     border: none; border-radius: 30px; 
-    background: white; 
+    background: rgb(255, 255, 255); color: #5d2de1;
   font-size: 20px; font-weight: bold; cursor: pointer; 
   transition: 0.3s; 
   }
@@ -60,7 +60,7 @@
   }
 
   a {
-    color: white; font-weight: 
+    color: rgb(58, 29, 29); font-weight: 
     bold; text-decoration: none; 
   }
   </style>
@@ -94,7 +94,8 @@
 <div class="container">
     <h1>Sign Up</h1>
     <input type="text" id="regUser" placeholder="Choose Username">
-    <input type="password" id="regPass" placeholder="Choose Password">
+<input type="password" id="regPass" placeholder="Choose Password">
+<input type="password" id="regPassConfirm" placeholder="Re-type Password">
     <button onclick="signup()">CREATE ACCOUNT</button>
     <p>Already have an account? <a href="index.html">LOGIN</a></p>
 </div>
@@ -103,27 +104,51 @@
 <script>
     const BASE_URL = "https://game-scope-backend.onrender.com"; 
 
-    async function signup() {
-      const username = $("#regUser").val();
-      const password = $("#regPass").val();
+async function signup() {
+  const username = $("#regUser").val();
+  const password = $("#regPass").val();
+  const confirmPassword = $("#regPassConfirm").val();
 
-      try {
-        const response = await fetch(`${BASE_URL}/api/signup`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
-        });
+  // 1. Check empty fields
+  if (!username || !password || !confirmPassword) {
+    alert("Please fill in all fields.");
+    return;
+  }
 
-        if (response.ok) {
-          alert("Account Created! Please Login.");
-          window.location.href = "index.html";
-        } else {
-          alert("Error: Username might be taken.");
-        }
-      } catch (err) {
-        alert("Backend server is offline!");
-      }
+  $("#regPassConfirm").on("input", function () {
+  const pass = $("#regPass").val();
+  const confirm = $(this).val();
+
+  if (pass !== confirm) {
+    $(this).css("border", "2px solid red");
+  } else {
+    $(this).css("border", "2px solid green");
+  }
+});
+
+  // 2. Check password match
+  if (password !== confirmPassword) {
+    alert("Passwords do not match. Please re-type correctly.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}/api/signup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+
+    if (response.ok) {
+      alert("Account Created! Please Login.");
+      window.location.href = "index.html";
+    } else {
+      alert("Error: Username might be taken.");
     }
+  } catch (err) {
+    alert("Backend server is offline!");
+  }
+}
 </script>
 
 <footer> &copy; 2026 Quiz Reviewer. All rights reserved. </footer>
