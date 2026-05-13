@@ -17,12 +17,12 @@
       height: 100vh; display: flex; 
       justify-content: center; align-items: center; 
       background: linear-gradient(180deg,#2d008f,#8b00ff); 
-      overflow: hidden; color: white; 
+      overflow: hidden; color: rgb(255, 255, 255); 
   }
 
   .container { 
       width: 450px; padding: 40px; border-radius: 25px; 
-      background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.2); 
+      background: rgba(75, 32, 32, 0.08); border: 2px solid rgba(255,255,255,0.2); 
   backdrop-filter: blur(10px); text-align: center; 
   position: relative; z-index: 10;
   }
@@ -36,15 +36,15 @@
     width: 100%; padding: 15px; 
       margin-bottom: 20px; border: none; 
   outline: none; border-radius: 30px; 
-  background: rgba(255,255,255,0.1); 
-  border: 2px solid rgba(255,255,255,0.2); color: white; 
+  background: rgba(190, 99, 99, 0.1); 
+  border: 2px solid rgba(87, 80, 20, 0.2); color: white; 
   font-size: 18px; 
   }
   
   button { 
       width: 100%; padding: 15px; 
       border: none; border-radius: 30px; 
-  background: white; color: #5d2de1; 
+  background: rgb(255, 255, 255); color: #5d2de1; 
   font-size: 20px; font-weight: bold; cursor: pointer; 
   transition: 0.3s; 
   }
@@ -59,7 +59,7 @@
   }
 
   a {
-      color: white; font-weight: 
+      color: rgb(58, 29, 29); font-weight: 
     bold; text-decoration: none; 
   }
   </style>
@@ -97,39 +97,61 @@
 
     <input type="password" id="loginPass" placeholder="Password">
 
-    <button onclick="login()">LOGIN</button>
+    <button onclick="loginUser()">LOGIN</button>
     
     <p>Don't have an account? <a href="signup.html">SIGN UP</a></p>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-    const BASE_URL = "https://game-scope-backend.onrender.com"; 
+const BASE_URL = "https://game-scope-backend.onrender.com";
 
-    async function login() {
-      const username = $("#loginUser").val();
-      const password = $("#loginPass").val();
+async function loginUser() {
 
-      try {
+    const usernameInput = document.getElementById("loginUser");
+    const passwordInput = document.getElementById("loginPass");
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!username || !password) {
+        alert("Please fill in all fields");
+        return;
+    }
+
+    try {
         const response = await fetch(`${BASE_URL}/api/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                password
+            })
         });
 
         const data = await response.json();
 
-        if (response.ok) {
-          localStorage.setItem("isLoggedIn", "true");
-          localStorage.setItem("currentUser", data.username);
-          window.location.href = "Game_Scope.html"; 
+        console.log("LOGIN RESPONSE:", data);
+
+        if (response.ok && data.username) {
+
+            localStorage.setItem("currentUser", data.username);
+            localStorage.setItem("isLoggedIn", "true");
+
+            alert("Login successful!");
+
+            window.location.href = "game_scope.html";
+
         } else {
-          alert(data.error || "Wrong Username or Password");
+            alert(data.error || data.message || "Invalid login");
         }
-      } catch (err) {
-        alert("Backend server is offline!");
-      }
+
+    } catch (err) {
+        console.log(err);
+        alert("Server error");
     }
+}
 </script>
 
 <footer> &copy; 2026 Quiz Reviewer. All rights reserved. </footer>

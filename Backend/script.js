@@ -297,7 +297,7 @@ function toggleButtons(status) {
 }
 
 function displayFinalScore() {
-    let finalScore = localStorage.getItem("lastScore") || 0;
+    let finalScore = Number(localStorage.getItem("lastScore")) || 0;
     const scoreDisplay = document.getElementById("final-score-display");
     if (scoreDisplay) {
         scoreDisplay.innerText = finalScore;
@@ -312,10 +312,26 @@ function loadRandomFact() {
     }
 }
 
+function showWelcomeUser() {
+    const user = localStorage.getItem("currentUser");
+
+    const welcomeElement = document.getElementById("welcome-user");
+
+    if (!welcomeElement) return;
+
+    if (user && user.trim() !== "") {
+        welcomeElement.innerText = `Welcome, ${user}!`;
+    } else {
+        welcomeElement.innerText = "Welcome!";
+    }
+}
+
 window.onload = function() {
     // Load general data
     if (typeof loadQuizList === "function") loadQuizList();
     if (typeof loadRandomFact === "function") loadRandomFact();
+
+    showWelcomeUser();
 
     const path = window.location.pathname.toLowerCase();
 

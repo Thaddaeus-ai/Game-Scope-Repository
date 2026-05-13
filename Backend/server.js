@@ -1,5 +1,4 @@
-// data base is finally working YESS YESS YESS
-
+require('dotenv').config();
 // 1. IMPORTS
 const bcrypt = require('bcryptjs');
 const express = require('express');
@@ -12,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // 3. DATABASE CONNECTION
-const mongoURI = "mongodb+srv://Daeus:GameScope2026@gamescope.audxbez.mongodb.net/QuizData?retryWrites=true&w=majority&appName=GameScope";
+const mongoURI = process.env.MONGO_URI;
 
 mongoose.connect(mongoURI)
   .then(() => console.log("✅ SUCCESS: Connected to MongoDB Atlas!"))
