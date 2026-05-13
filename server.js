@@ -1,4 +1,3 @@
-require('dotenv').config();
 // 1. IMPORTS
 const bcrypt = require('bcryptjs');
 const express = require('express');
@@ -11,7 +10,9 @@ app.use(cors());
 app.use(express.json());
 
 // 3. DATABASE CONNECTION
+// Using your SRV string
 const mongoURI = "mongodb+srv://Daeus:GameScope2026@gamescope.audxbez.mongodb.net/QuizData?retryWrites=true&w=majority&appName=GameScope";
+
 mongoose.connect(mongoURI)
   .then(() => console.log("✅ SUCCESS: Connected to MongoDB Atlas!"))
   .catch((err) => {
@@ -21,7 +22,7 @@ mongoose.connect(mongoURI)
 
 // 4. SCHEMAS
 const quizSchema = new mongoose.Schema({
-    username: String, // Tracks which user owns the quiz
+    username: String, 
     quizName: String,
     questions: [{
         question: String,
@@ -53,7 +54,7 @@ app.get('/api/quizzes', async (req, res) => {
     } catch (err) { res.status(500).send(err); }
 });
 
-// Save a question to a specific user's quiz
+// Save a question
 app.post('/api/save-question', async (req, res) => {
     const { quizName, questionData, username } = req.body;
     try {
@@ -106,7 +107,8 @@ app.post('/api/login', async (req, res) => {
 });
 
 // 6. START SERVER (Always at the bottom)
-const PORT = process.env.PORT || 10000; 
+// Changed to listen on 0.0.0.0 for Render
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 Server running on port ${PORT}`);
 });
