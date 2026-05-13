@@ -1,41 +1,27 @@
-//This is the to do list
-//Question Text: Needs id="question-text"
-//Buttons: Needs IDs btn0, btn1, btn2, btn3 and class="StartButton" (to use your purple CSS).
-//Feedback: Needs<p id="feedback"></p
-//score:Needs<span id="score">0</span
-
-//Go to the bottom of the script: Add }; right after the displayFinalScore(); line and before function shuffle. DONE
-//Make the save quiz work and save in database. DONE
-//add log in and log out page. DONE
-//Go to showQuestion: Delete the duplicate let quiz and let q lines. DONE
-// to saveQuestion: Add the other answer IDs to your if check. DONE
-
+// --- CONFIGURATION ---
+const BASE_URL = "https://game-scope-backend.onrender.com"; 
 
 function checkLogin() {
-    // We normalize the path to lowercase
+    // Normalizing to lowercase to prevent GitHub 404 errors
     const path = window.location.pathname.toLowerCase();
     const isLoggedIn = localStorage.getItem("isLoggedIn");
 
-    // We only want to "Protect" the actual game pages.
-    // If the URL contains any of these, we check if they are logged in.
+    // We only protect the game pages
     const isGamePage = path.includes("game_scope.html") || 
                        path.includes("gsaq.html") || 
                        path.includes("gsqp.html") || 
                        path.includes("scores.html");
 
     if (isGamePage && isLoggedIn !== "true") {
-        // If they are on a game page but not logged in, send to login (index.html)
+        console.log("Access Denied: Redirecting to Login.");
         window.location.href = "index.html";
     }
 }
 
-// Run the check
+// Run the check immediately
 checkLogin();
 
-// --- CONFIGURATION ---
-const BASE_URL = "https://game-scope-backend.onrender.com"; 
-
-// this is the remove previous questions when closed function guys!
+// This clears the current quiz if the user closes the browser
 if (!sessionStorage.getItem("sessionStarted")) {
     localStorage.removeItem("quiz");
     sessionStorage.setItem("sessionStarted", "true");
@@ -116,6 +102,7 @@ const funFacts = [
     "You are doing a great job! Keep learning and building cool things!",
 ];
 
+// --- SAVE QUIZ FUNCTION ---
 async function saveQuestion() {
     const qInput = document.getElementById("question");
     const a1 = document.getElementById("a1");
@@ -125,6 +112,9 @@ async function saveQuestion() {
     const cIndex = document.getElementById("correctIndex");
     
     const currentUser = localStorage.getItem("currentUser");
+
+    // Debugging: See who is trying to save
+    console.log("Current User Saving:", currentUser);
 
     if (!qInput.value || !a1.value || !a2.value || !a3.value || !a4.value) {
         alert("Please fill in all fields!");
@@ -147,20 +137,24 @@ async function saveQuestion() {
             body: JSON.stringify({ 
                 quizName, 
                 questionData,
-                username: currentUser 
+                username: currentUser // CRITICAL: This links the quiz to YOU
             })
         });
 
         if (response.ok) {
-            alert("Question saved to your Cloud account!");
+            alert("Question saved to your account!");
             qInput.value = ""; a1.value = ""; a2.value = ""; a3.value = ""; a4.value = "";
+        } else {
+            const errData = await response.json();
+            alert("Save failed: " + errData.error);
         }
     } catch (err) {
-        alert("Server is offline. Check if your Render app is running!");
+        console.error("Save Error:", err);
+        alert("Server is offline or waking up. Please wait 30 seconds and try again!");
     }
 }
 
-//this method checks the quiz for the specific account!!
+// --- LOAD QUIZZES ---
 async function loadQuizList() {
     const listDiv = document.getElementById("quiz-list");
     if (!listDiv) return;
@@ -173,11 +167,16 @@ async function loadQuizList() {
         
         listDiv.innerHTML = "";
 
+        if (allQuizzes.length === 0) {
+            listDiv.innerHTML = "<p style='color:white; text-align:center;'>No quizzes found. Add one!</p>";
+        }
+
         allQuizzes.forEach(quiz => {
             const container = document.createElement("div");
+            container.className = "quiz-container";
             container.style.display = "flex";
             container.style.gap = "10px";
-            container.style.alignItems = "center";
+            container.style.marginBottom = "10px";
 
             const btn = document.createElement("button");
             btn.className = "quiz-item";
@@ -193,9 +192,12 @@ async function loadQuizList() {
             const delBtn = document.createElement("button");
             delBtn.innerText = "X";
             delBtn.className = "delete-quiz-btn";
-            delBtn.onclick = function(e) {
+            delBtn.onclick = async function(e) {
                 e.stopPropagation(); 
-                deleteQuiz(quiz.quizName);
+                if(confirm(`Delete ${quiz.quizName}?`)) {
+                    await fetch(`${BASE_URL}/api/quiz/${quiz.quizName}`, { method: 'DELETE' });
+                    loadQuizList();
+                }
             };
 
             container.appendChild(btn);
@@ -203,21 +205,11 @@ async function loadQuizList() {
             listDiv.appendChild(container);
         });
     } catch (err) {
-        console.log("Could not load quizzes from server.");
+        console.log("Server error loading quizzes.");
     }
 }
 
-async function deleteQuiz(name) {
-    if (confirm("Are you sure you want to delete '" + name + "'?")) {
-        await fetch(`${BASE_URL}/api/quiz/${name}`, { method: 'DELETE' });
-        if (selectedQuizName === name) {
-            selectedQuizName = null;
-        }
-        loadQuizList();
-    }
-}
-
-//this loads the quiz selected!
+// --- GAME LOGIC ---
 function startSelectedQuiz() {
     if (!selectedQuizName) {
         alert("Please select a quiz from the list first!");
@@ -226,9 +218,8 @@ function startSelectedQuiz() {
     window.location.href = "GSQP.html";
 }
 
-//this starts the game guys!!!
 function startGame() {
-    score = 0; // Reset score to 0 at the start of a game
+    score = 0;
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     if (quiz.length === 0) {
         window.location.href = "GSAQ.html";
@@ -243,12 +234,9 @@ function showQuestion() {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     if (!quiz[currentQuestionIndex]) return;
     let q = quiz[currentQuestionIndex];
-
     const feedback = document.getElementById("feedback");
     if(feedback) feedback.innerText = "";
-    
     toggleButtons(false);
-
     const qText = document.getElementById("question-text");
     if(qText) {
         qText.innerText = q.question;
@@ -265,14 +253,13 @@ function checkAnswer(selectedIndex) {
     let feedback = document.getElementById("feedback");
 
     if (selectedIndex == q.correct) {
-        score += 5; // Add 5 points
+        score += 5; 
         const scoreElement = document.getElementById("score");
         if(scoreElement) scoreElement.innerText = score;
         if(feedback) feedback.innerText = "Correct! +5 Points";
     } else {
         if(feedback) feedback.innerText = "Wrong!";
     }
-
     toggleButtons(true);
     setTimeout(() => { nextQuestion(); }, 1500);
 }
@@ -280,7 +267,6 @@ function checkAnswer(selectedIndex) {
 function nextQuestion() {
     let quiz = JSON.parse(localStorage.getItem("quiz")) || [];
     currentQuestionIndex++;
-
     if (currentQuestionIndex < quiz.length) {
         showQuestion();
     } else {
@@ -297,11 +283,15 @@ function toggleButtons(status) {
 }
 
 function displayFinalScore() {
-    let finalScore = Number(localStorage.getItem("lastScore")) || 0;
+    let finalScore = localStorage.getItem("lastScore") || 0;
     const scoreDisplay = document.getElementById("final-score-display");
-    if (scoreDisplay) {
-        scoreDisplay.innerText = finalScore;
-    }
+    if (scoreDisplay) scoreDisplay.innerText = finalScore;
+}
+
+function showWelcomeUser() {
+    const user = localStorage.getItem("currentUser");
+    const welcomeElement = document.getElementById("welcome-user");
+    if (welcomeElement && user) welcomeElement.innerText = `Welcome, ${user}!`;
 }
 
 function loadRandomFact() {
@@ -312,35 +302,13 @@ function loadRandomFact() {
     }
 }
 
-function showWelcomeUser() {
-    const user = localStorage.getItem("currentUser");
-
-    const welcomeElement = document.getElementById("welcome-user");
-
-    if (!welcomeElement) return;
-
-    if (user && user.trim() !== "") {
-        welcomeElement.innerText = `Welcome, ${user}!`;
-    } else {
-        welcomeElement.innerText = "Welcome!";
-    }
-}
-
 window.onload = function() {
-    // Load general data
     if (typeof loadQuizList === "function") loadQuizList();
     if (typeof loadRandomFact === "function") loadRandomFact();
-
     showWelcomeUser();
-
     const path = window.location.pathname.toLowerCase();
-
-    if (path.includes("gsqp.html")) {
-        startGame();
-    } 
-    else if (path.includes("scores.html")) {
-        displayFinalScore();
-    }
+    if (path.includes("gsqp.html")) startGame();
+    else if (path.includes("scores.html")) displayFinalScore();
 };
 
 function shuffle(array) {
