@@ -7,76 +7,73 @@
     <title>Customize your quizlet!</title>
     
     <style>
-        .main-purple-box {
-    background-color: #7338a0;
-    width: 90%; max-width: 800px;
-    margin: 0 auto; padding: 30px;
-    border-radius: 15px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    }
-
-    .box-desc {
-    color: #dec9f1; font-size: 16px;
-    margin-bottom: 20px; text-align: left;
+    /* --- FIXING THE SCROLLING --- */
+    html, body {
+        height: auto; /* Allows the page to grow with content */
+        min-height: 100%;
+        overflow-y: auto; /* Forces the scrollbar to appear if needed */
+        background-color: #fffdf1;
     }
 
     body {
-    background-color: #fffdf1;
-    font-family: "Helvetica Neue", Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    }
-
-    .outside-title {
-    color: #46178f;
-    font-size: 30px;
-    margin-left: 5%;
-    margin-bottom: 10px;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        padding-bottom: 100px; /* Adds space at the bottom so the footer doesn't hide buttons */
     }
 
     .main-purple-box {
-    background-color: #7338a0; /* Same as your Start button */
-    width: 90%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0px 10px 25px rgba(0,0,0,0.3);
+        background-color: #7338a0;
+        width: 90%; 
+        max-width: 800px;
+        margin: 0 auto; 
+        padding: 30px;
+        border-radius: 15px; 
+        box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+        margin-bottom: 40px; /* Space between box and footer */
     }
 
-    .description {
-    color: #e0d0f0;
-    margin-bottom: 25px;
+    .box-desc {
+        color: #dec9f1; font-size: 16px;
+        margin-bottom: 20px; text-align: left;
     }
 
+    h2 {
+        padding-left: 30%; 
+        color: #5e1a92; 
+        font-family: Arial, Helvetica, sans-serif; 
+        font-size: 40px; 
+        margin-top: 20px;
+    }
 
     label {
-    display: block;
-    color: white;
-    font-weight: bold;
-    margin-bottom: 8px;
+        display: block;
+        color: white;
+        font-weight: bold;
+        margin-bottom: 8px;
     }
 
     input[type="text"], .purple-select {
-    width: 100%;
-    padding: 15px;
-    background-color: #46178f; 
-    border: 2px solid #c2a5df;
-    border-radius: 12px;
-    color: white;
-    font-size: 18px;
-    outline: none;
-    box-sizing: border-box;
+        width: 100%;
+        padding: 15px;
+        background-color: #46178f; 
+        border: 2px solid #c2a5df;
+        border-radius: 12px;
+        color: white;
+        font-size: 18px;
+        outline: none;
+        box-sizing: border-box;
     }
 
     input[type="text"]:focus {
-    border-color: white;
+        border-color: white;
     }
 
     .answers-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
     }
 
     .input-group {
@@ -85,24 +82,32 @@
 
     .AddButton, .GBackButton {
         width: 100%;
-    font-size: 24px;
-    padding: 15px;
-    background-color: #7338a0;
-    color: white;
-    border: 2px solid #c2a5df;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 10px;
+        font-size: 24px;
+        padding: 15px;
+        background-color: #7338a0;
+        color: white;
+        border: 2px solid #c2a5df;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 10px;
+        transition: 0.3s;
     }
 
     .AddButton:hover, .GBackButton:hover {
         background-color: #5e1a92;
+        transform: scale(1.01);
     }
 
-    h2 {
-    padding-left: 30%; color: #5e1a92; font-family: Arial, Helvetica, sans-serif; 
-        font-size: 40px; 
+    /* --- FOOTER FIX --- */
+    footer {
+        position: relative; /* Changed from fixed so it stays at the end of the content */
+        text-align: center;
+        width: 100%;
+        padding: 20px 0;
+        background-color: #924DBF;
+        color: white;
+        margin-top: 50px;
     }
     </style>
     
@@ -111,60 +116,56 @@
 
 <h2 class="form-title"><b>Add Questions!</b></h2>
 
+<div class="main-purple-box">
+    <p class="box-desc">Customize your quiz here! Add questions to your custom quizlet.</p>
 
-    <div class="main-purple-box">
-        <p class="box-desc">Customize your quiz here! Add questions to your custom quizlet.</p>
-
-<form id="quizForm">
-    <div class="input-group">
-        <label for="question">Question</label>
-        <input type="text" id="question" placeholder="Type your question here...">
-    </div>
-
-    <div class="answers-grid">
-    <div class="input-group">
-    <label for="a1">Answer 1</label>
-    <input type="text" id="a1" placeholder="Option 1">
-    </div>
-
-    <div class="input-group">
-        <label for="a2">Answer 2</label>
-        <input type="text" id="a2" placeholder="Option 2">
-    </div>
-
-    <div class="input-group">
-        <label for="a3">Answer 3</label>
-        <input type="text" id="a3" placeholder="Option 3">
-    </div>
-        
+    <form id="quizForm">
         <div class="input-group">
-        <label for="a4">Answer 4</label>
-        <input type="text" id="a4" placeholder="Option 4">
-    </div>
-    </div>
+            <label for="question">Question</label>
+            <input type="text" id="question" placeholder="Type your question here...">
+        </div>
 
+        <div class="answers-grid">
+            <div class="input-group">
+                <label for="a1">Answer 1</label>
+                <input type="text" id="a1" placeholder="Option 1">
+            </div>
 
-<div class="input-group">
-    <label for="correctIndex">Correct Answer:</label>
-        <select id="correctIndex" class="purple-select">
-        <option value="0">Answer 1</option>
-        <option value="1">Answer 2</option>
-        <option value="2">Answer 3</option>
-        <option value="3">Answer 4</option>
-        </select>
+            <div class="input-group">
+                <label for="a2">Answer 2</label>
+                <input type="text" id="a2" placeholder="Option 2">
+            </div>
+
+            <div class="input-group">
+                <label for="a3">Answer 3</label>
+                <input type="text" id="a3" placeholder="Option 3">
+            </div>
+            
+            <div class="input-group">
+                <label for="a4">Answer 4</label>
+                <input type="text" id="a4" placeholder="Option 4">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="correctIndex">Correct Answer:</label>
+            <select id="correctIndex" class="purple-select">
+                <option value="0">Answer 1</option>
+                <option value="1">Answer 2</option>
+                <option value="2">Answer 3</option>
+                <option value="3">Answer 4</option>
+            </select>
         </div>
 
         <div class="button-group">
-        <button type="button" class="AddButton" onclick="saveQuestion()">Save Question</button>
-        <button type="button" class="GBackButton" onclick="location.href='Game_Scope.html'">Go Back</button>
+            <button type="button" class="AddButton" onclick="saveQuestion()">Save Question</button>
+            <button type="button" class="GBackButton" onclick="location.href='Game_Scope.html'">Go Back</button>
         </div>
-        </form>
-    </div>
-
+    </form>
+</div>
 
 <script src="script.js"></script>
   
-  <footer> &copy; 2026 Quiz Reviewer. All rights reserved. </footer>
+<footer> &copy; 2026 Quiz Reviewer. All rights reserved. </footer>
 </body>
-
 </html>
