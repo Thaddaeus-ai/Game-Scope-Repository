@@ -120,13 +120,13 @@ async function loginUser() {
 
     try {
         const response = await fetch(`${BASE_URL}/api/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                username,
-                password
+            username,
+            password
             })
         });
 
@@ -140,16 +140,15 @@ async function loginUser() {
             localStorage.setItem("isLoggedIn", "true");
 
             alert("Login successful!");
-
             window.location.href = "Game_Scope.html";
 
         } else {
-            alert(data.error || data.message || "Invalid login");
+        alert(data.error || data.message || "Invalid login");
         }
 
     } catch (err) {
-        console.log(err);
-        alert("Server error");
+    console.log(err);
+    alert("Server error");
     }
 }
 </script>

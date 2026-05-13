@@ -9,9 +9,9 @@
     <style>
     /* --- FIXING THE SCROLLING --- */
     html, body {
-        height: auto; /* Allows the page to grow with content */
+        height: auto;
         min-height: 100%;
-        overflow-y: auto; /* Forces the scrollbar to appear if needed */
+        overflow-y: auto;
         background-color: #fffdf1;
     }
 
@@ -19,7 +19,7 @@
         font-family: "Helvetica Neue", Arial, sans-serif;
         margin: 0;
         padding: 20px;
-        padding-bottom: 100px; /* Adds space at the bottom so the footer doesn't hide buttons */
+        padding-bottom: 100px;
     }
 
     .main-purple-box {
@@ -27,10 +27,9 @@
         width: 90%; 
         max-width: 800px;
         margin: 0 auto; 
-        padding: 30px;
-        border-radius: 15px; 
+        padding: 30px;  border-radius: 15px; 
         box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-        margin-bottom: 40px; /* Space between box and footer */
+        margin-bottom: 40px;
     }
 
     .box-desc {
@@ -42,8 +41,7 @@
         padding-left: 30%; 
         color: #5e1a92; 
         font-family: Arial, Helvetica, sans-serif; 
-        font-size: 40px; 
-        margin-top: 20px;
+        font-size: 40px; margin-top: 20px;
     }
 
     label {
@@ -55,11 +53,8 @@
 
     input[type="text"], .purple-select {
         width: 100%;
-        padding: 15px;
-        background-color: #46178f; 
-        border: 2px solid #c2a5df;
-        border-radius: 12px;
-        color: white;
+        padding: 15px; background-color: #46178f; border: 2px solid #c2a5df;
+        border-radius: 12px; color: white;
         font-size: 18px;
         outline: none;
         box-sizing: border-box;
@@ -81,33 +76,28 @@
     }
 
     .AddButton, .GBackButton {
-        width: 100%;
-        font-size: 24px;
-        padding: 15px;
-        background-color: #7338a0;
-        color: white;
-        border: 2px solid #c2a5df;
-        border-radius: 12px;
-        cursor: pointer;
+        width: 100%;  font-size: 24px; padding: 15px;
+        background-color: #7338a0; color: white;border: 2px solid #c2a5df;
+        border-radius: 12px; cursor: pointer;
         font-weight: bold;
         margin-top: 10px;
         transition: 0.3s;
     }
 
     .AddButton:hover, .GBackButton:hover {
-        background-color: #5e1a92;
-        transform: scale(1.01);
+    background-color: #5e1a92;
+    transform: scale(1.01);
     }
 
-    /* --- FOOTER FIX --- */
+
     footer {
-        position: relative; /* Changed from fixed so it stays at the end of the content */
+        position: relative;
         text-align: center;
         width: 100%;
-        padding: 20px 0;
         background-color: #924DBF;
         color: white;
         margin-top: 50px;
+        left: 0;
     }
     </style>
     
